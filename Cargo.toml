@@ -34,8 +34,8 @@ edge = ["sqlite"]
 mysql = ["diesel/mysql", "diesel_migrations/mysql"]
 postgresql = ["diesel/postgres", "diesel_migrations/postgres"]
 sqlite = ["diesel/sqlite", "diesel_migrations/sqlite", "dep:libsqlite3-sys"]
-# Enable to use a vendored and statically linked openssl
-vendored_openssl = ["openssl/vendored"]
+# Enable to use a vendored and statically linked openssl (for transitive dependencies)
+vendored_openssl = []
 # Enable MiMalloc memory allocator to replace the default malloc
 # This can improve performance for Alpine builds
 enable_mimalloc = ["dep:mimalloc"]
@@ -163,8 +163,8 @@ cached = { version = "0.59.0", features = ["async"] }
 cookie = "0.18.1"
 cookie_store = "0.22.1"
 
-# Used by U2F, JWT and PostgreSQL
-openssl = "0.10.76"
+# Pure-Rust RSA implementation (replaces direct openssl usage for key generation/loading)
+rsa = "0.9.10"
 
 # CLI argument parsing
 pico-args = "0.5.0"
