@@ -7,7 +7,9 @@ use std::{
 use chrono::{DateTime, TimeDelta, Utc};
 use jsonwebtoken::{errors::ErrorKind, Algorithm, DecodingKey, EncodingKey, Header};
 use num_traits::FromPrimitive;
-use openssl::rsa::Rsa;
+use rsa::pkcs1::DecodeRsaPrivateKey;
+use rsa::pkcs8::{DecodePrivateKey, EncodePrivateKey, EncodePublicKey, LineEnding};
+use rsa::RsaPrivateKey;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 
@@ -70,18 +72,35 @@ pub async fn initialize_keys() -> Result<(), Error> {
     };
 
     let (priv_key, priv_key_buffer) = if let Some(priv_key_buffer) = priv_key_buffer {
-        (Rsa::private_key_from_pem(priv_key_buffer.to_vec().as_slice())?, priv_key_buffer.to_vec())
+        let priv_key_vec = priv_key_buffer.to_vec();
+        let pem_str = std::str::from_utf8(&priv_key_vec)
+            .map_err(|e| Error::other(format!("Private RSA key is not valid UTF-8: {e}")))?;
+        // Try PKCS#1 first (legacy OpenSSL format), then PKCS#8
+        let key = RsaPrivateKey::from_pkcs1_pem(pem_str).or_else(|pkcs1_err| {
+            RsaPrivateKey::from_pkcs8_pem(pem_str).map_err(|pkcs8_err| {
+                Error::other(format!("Failed to parse private RSA key (PKCS#1: {pkcs1_err}, PKCS#8: {pkcs8_err})"))
+            })
+        })?;
+        (key, priv_key_vec)
     } else {
-        let rsa_key = Rsa::generate(2048)?;
-        let priv_key_buffer = rsa_key.private_key_to_pem()?;
-        operator.write(&rsa_key_filename, priv_key_buffer.clone()).await?;
+        let mut rng = rsa::rand_core::OsRng;
+        let rsa_key =
+            RsaPrivateKey::new(&mut rng, 2048).map_err(|e| Error::other(format!("Failed to generate RSA key: {e}")))?;
+        let priv_key_buffer = rsa_key
+            .to_pkcs8_pem(LineEnding::LF)
+            .map_err(|e| Error::other(format!("Failed to encode RSA key to PEM: {e}")))?;
+        let priv_key_bytes = priv_key_buffer.as_bytes().to_vec();
+        operator.write(&rsa_key_filename, priv_key_bytes.clone()).await?;
         info!("Private key '{}' created correctly", CONFIG.private_rsa_key());
-        (rsa_key, priv_key_buffer)
+        (rsa_key, priv_key_bytes)
     };
-    let pub_key_buffer = priv_key.public_key_to_pem()?;
+    let pub_key_buffer = priv_key
+        .to_public_key()
+        .to_public_key_pem(LineEnding::LF)
+        .map_err(|e| Error::other(format!("Failed to encode public RSA key to PEM: {e}")))?;
 
     let enc = EncodingKey::from_rsa_pem(&priv_key_buffer)?;
-    let dec: DecodingKey = DecodingKey::from_rsa_pem(&pub_key_buffer)?;
+    let dec: DecodingKey = DecodingKey::from_rsa_pem(pub_key_buffer.as_bytes())?;
     if PRIVATE_RSA_KEY.set(enc).is_err() {
         err!("PRIVATE_RSA_KEY must only be initialized once")
     }
