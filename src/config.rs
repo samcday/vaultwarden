@@ -574,6 +574,10 @@ make_config! {
 
     /// General settings
     settings {
+        /// Node role |> Role of this vaultwarden node. Valid values are "primary" and "read-replica".
+        /// No behavioral effect yet; this is plumbing for future edge read/write split support.
+        node_role:              String, false,  def,    "primary".to_string();
+
         /// Domain URL |> This needs to be set to the URL used to access the server, including 'http[s]://'
         /// and port, if it's different than the default. Some server functions don't work correctly without this value
         domain:                 String, true,   def,    "http://localhost".to_string();
@@ -940,6 +944,11 @@ fn validate_config(cfg: &ConfigItems, on_update: bool) -> Result<(), Error> {
                 }
             }
         }
+    }
+
+    match cfg.node_role.as_str() {
+        "primary" | "read-replica" => (),
+        _ => err!("`NODE_ROLE` must be \"primary\" or \"read-replica\""),
     }
 
     if cfg.password_iterations < 100_000 {
@@ -1560,6 +1569,11 @@ impl Config {
             usr.merge(&other, false, &mut _overrides)
         };
         self.update_config(builder, false).await
+    }
+
+    /// Tests whether this node is configured as a read-replica.
+    pub fn is_read_replica(&self) -> bool {
+        self.node_role() == "read-replica"
     }
 
     /// Tests whether an email's domain is allowed. A domain is allowed if it
