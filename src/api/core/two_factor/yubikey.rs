@@ -21,6 +21,11 @@ pub fn routes() -> Vec<Route> {
     routes![generate_yubikey, activate_yubikey, activate_yubikey_put,]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    Vec::new()
+}
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct EnableYubikeyData {

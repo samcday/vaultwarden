@@ -21,6 +21,11 @@ pub fn routes() -> Vec<Route> {
     routes![get_org_events, get_cipher_events, get_user_events,]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    routes![get_org_events, get_cipher_events, get_user_events]
+}
+
 #[derive(FromForm)]
 struct EventRange {
     start: String,
@@ -149,6 +154,11 @@ fn get_continuation_token(events_json: &[Value]) -> Option<&str> {
 /// /events routes
 pub fn main_routes() -> Vec<Route> {
     routes![post_events_collect,]
+}
+
+#[allow(dead_code)]
+pub fn main_read_routes() -> Vec<Route> {
+    Vec::new()
 }
 
 #[derive(Debug, Deserialize)]

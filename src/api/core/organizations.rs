@@ -102,6 +102,39 @@ pub fn routes() -> Vec<Route> {
     ]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    routes![
+        get_organization,
+        get_user_collections,
+        get_org_collections,
+        get_org_collections_details,
+        get_org_collection_detail,
+        get_collection_users,
+        get_org_details,
+        get_members,
+        get_org_user_mini_details,
+        get_user,
+        list_policies,
+        list_policies_token,
+        get_master_password_policy,
+        get_policy,
+        get_plans,
+        get_organization_keys,
+        get_organization_public_key,
+        get_groups,
+        get_groups_details,
+        get_group,
+        get_group_details,
+        get_group_members,
+        get_reset_password_details,
+        get_org_export,
+        get_billing_metadata,
+        get_billing_warnings,
+        get_auto_enroll_status,
+    ]
+}
+
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct OrgData {

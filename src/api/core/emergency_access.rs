@@ -43,6 +43,11 @@ pub fn routes() -> Vec<Route> {
     ]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    routes![get_contacts, get_grantees, get_emergency_access, policies_emergency_access]
+}
+
 // region get
 
 #[get("/emergency-access/trusted")]

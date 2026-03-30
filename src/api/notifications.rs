@@ -47,6 +47,15 @@ pub fn routes() -> Vec<Route> {
     }
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    if CONFIG.enable_websocket() {
+        routes![websockets_hub, anonymous_websockets_hub]
+    } else {
+        routes![]
+    }
+}
+
 #[derive(FromForm, Debug)]
 struct WsAccessToken {
     access_token: Option<String>,

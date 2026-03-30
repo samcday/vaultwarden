@@ -37,9 +37,40 @@ pub fn routes() -> Vec<Route> {
     routes
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    let mut eq_domains_routes = routes![get_eq_domains];
+    let mut hibp_routes = routes![hibp_breach];
+    let mut meta_routes = routes![alive, now, version, config, get_api_webauthn];
+
+    let mut routes = Vec::new();
+    routes.append(&mut accounts::read_routes());
+    routes.append(&mut ciphers::read_routes());
+    routes.append(&mut emergency_access::read_routes());
+    routes.append(&mut events::read_routes());
+    routes.append(&mut folders::read_routes());
+    routes.append(&mut organizations::read_routes());
+    routes.append(&mut two_factor::read_routes());
+    routes.append(&mut sends::read_routes());
+    routes.append(&mut public::read_routes());
+    routes.append(&mut eq_domains_routes);
+    routes.append(&mut hibp_routes);
+    routes.append(&mut meta_routes);
+
+    routes
+}
+
 pub fn events_routes() -> Vec<Route> {
     let mut routes = Vec::new();
     routes.append(&mut events::main_routes());
+
+    routes
+}
+
+#[allow(dead_code)]
+pub fn events_read_routes() -> Vec<Route> {
+    let mut routes = Vec::new();
+    routes.append(&mut events::main_read_routes());
 
     routes
 }

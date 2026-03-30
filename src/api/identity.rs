@@ -49,6 +49,11 @@ pub fn routes() -> Vec<Route> {
     ]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    routes![prevalidate, authorize, oidcsignin, oidcsignin_error]
+}
+
 #[post("/connect/token", data = "<data>")]
 async fn login(
     data: Form<ConnectData>,

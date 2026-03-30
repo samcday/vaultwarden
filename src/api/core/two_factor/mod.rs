@@ -50,6 +50,20 @@ pub fn routes() -> Vec<Route> {
     routes
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    let mut routes = routes![get_twofactor, get_device_verification_settings];
+
+    routes.append(&mut authenticator::read_routes());
+    routes.append(&mut duo::read_routes());
+    routes.append(&mut email::read_routes());
+    routes.append(&mut webauthn::read_routes());
+    routes.append(&mut yubikey::read_routes());
+    routes.append(&mut protected_actions::read_routes());
+
+    routes
+}
+
 #[get("/two-factor")]
 async fn get_twofactor(headers: Headers, conn: DbConn) -> Json<Value> {
     let twofactors = TwoFactor::find_by_user(&headers.user.uuid, &conn).await;
