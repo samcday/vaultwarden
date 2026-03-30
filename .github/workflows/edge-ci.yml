@@ -1,0 +1,59 @@
+name: Edge CI
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/edge-ci.yml"
+      - "src/**"
+      - "migrations/**"
+      - "Cargo.*"
+      - "build.rs"
+      - "rust-toolchain.toml"
+      - "rustfmt.toml"
+      - "macros/**"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  edge-check:
+    name: Edge Build & Test (SQLite)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      RUSTFLAGS: "-Dwarnings"
+
+    steps:
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends openssl build-essential libssl-dev pkg-config
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        run: |
+          RUST_TOOLCHAIN="$(grep -m1 -oP 'channel.*"(\K.*?)(?=")' rust-toolchain.toml)"
+          rm rust-toolchain.toml
+          rustup toolchain install "${RUST_TOOLCHAIN}" --profile minimal --no-self-update
+          rustup component add --toolchain "${RUST_TOOLCHAIN}" rustfmt clippy
+          rustup default "${RUST_TOOLCHAIN}"
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: "edge-rust"
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Clippy (sqlite)
+        run: cargo clippy --profile ci --features sqlite
+
+      - name: Test (sqlite)
+        run: cargo test --profile ci --features sqlite
