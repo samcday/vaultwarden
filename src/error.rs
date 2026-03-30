@@ -49,10 +49,10 @@ use lettre::address::AddressError as AddrErr;
 use lettre::error::Error as LettreErr;
 use lettre::transport::smtp::Error as SmtpErr;
 use opendal::Error as OpenDALErr;
-use openssl::error::ErrorStack as SSLErr;
 use regex::Error as RegexErr;
 use reqwest::Error as ReqErr;
 use rocket::error::Error as RocketErr;
+
 use serde_json::{Error as SerdeErr, Value};
 use std::io::Error as IoErr;
 use std::time::SystemTimeError as TimeErr;
@@ -97,7 +97,6 @@ make_error! {
     Lettre(LettreErr): _has_source, _api_error,
     Address(AddrErr):  _has_source, _api_error,
     Smtp(SmtpErr):     _has_source, _api_error,
-    OpenSSL(SSLErr):   _has_source, _api_error,
     Rocket(RocketErr): _has_source, _api_error,
 
     DieselCon(DieselConErr): _has_source, _api_error,
