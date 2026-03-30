@@ -29,6 +29,8 @@ default = [
 ]
 # Empty to keep compatibility, prefer to set USE_SYSLOG=true
 enable_syslog = []
+# Convenience alias for edge deployments (SQLite-only)
+edge = ["sqlite"]
 mysql = ["diesel/mysql", "diesel_migrations/mysql"]
 postgresql = ["diesel/postgres", "diesel_migrations/postgres"]
 sqlite = ["diesel/sqlite", "diesel_migrations/sqlite", "dep:libsqlite3-sys"]
