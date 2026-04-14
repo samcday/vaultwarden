@@ -34,6 +34,21 @@ pub fn routes() -> Vec<Route> {
     routes
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    let mut routes = routes![attachments, alive, static_files];
+    if CONFIG.web_vault_enabled() {
+        routes.append(&mut routes![web_index, web_index_direct, app_id, web_files, vaultwarden_css]);
+    }
+
+    #[cfg(debug_assertions)]
+    if CONFIG.reload_templates() {
+        routes.append(&mut routes![_static_files_dev]);
+    }
+
+    routes
+}
+
 pub fn catchers() -> Vec<Catcher> {
     if CONFIG.web_vault_enabled() {
         catchers![not_found]

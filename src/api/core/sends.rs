@@ -58,6 +58,11 @@ pub fn routes() -> Vec<rocket::Route> {
     ]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<rocket::Route> {
+    routes![get_sends, get_send, download_send]
+}
+
 pub async fn purge_sends(pool: DbPool) {
     debug!("Purging sends");
     if let Ok(conn) = pool.get().await {

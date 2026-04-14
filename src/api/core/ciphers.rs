@@ -99,6 +99,11 @@ pub fn routes() -> Vec<Route> {
     ]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    routes![sync, get_ciphers, get_cipher, get_cipher_admin, get_cipher_details, get_attachment,]
+}
+
 pub async fn purge_trashed_ciphers(pool: DbPool) {
     debug!("Purging trashed ciphers");
     if let Ok(conn) = pool.get().await {

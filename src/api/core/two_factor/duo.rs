@@ -23,6 +23,11 @@ pub fn routes() -> Vec<Route> {
     routes![get_duo, activate_duo, activate_duo_put,]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    Vec::new()
+}
+
 #[derive(Serialize, Deserialize)]
 struct DuoData {
     host: String, // Duo API hostname

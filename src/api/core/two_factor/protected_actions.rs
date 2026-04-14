@@ -17,6 +17,11 @@ pub fn routes() -> Vec<Route> {
     routes![request_otp, verify_otp]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    Vec::new()
+}
+
 /// Data stored in the TwoFactor table in the db
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProtectedActionData {

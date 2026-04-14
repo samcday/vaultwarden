@@ -14,6 +14,11 @@ pub fn routes() -> Vec<rocket::Route> {
     routes![get_folders, get_folder, post_folders, post_folder, put_folder, delete_folder_post, delete_folder,]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<rocket::Route> {
+    routes![get_folders, get_folder]
+}
+
 #[get("/folders")]
 async fn get_folders(headers: Headers, conn: DbConn) -> Json<Value> {
     let folders = Folder::find_by_user(&headers.user.uuid, &conn).await;

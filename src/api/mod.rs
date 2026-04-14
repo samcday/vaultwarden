@@ -32,6 +32,14 @@ pub use crate::api::{
     web::routes as web_routes,
     web::static_files,
 };
+
+#[allow(unused_imports)]
+pub use crate::api::{
+    admin::read_routes as admin_read_routes, core::events_read_routes as core_events_read_routes,
+    core::read_routes as core_read_routes, icons::read_routes as icons_read_routes,
+    identity::read_routes as identity_read_routes, notifications::read_routes as notifications_read_routes,
+    web::read_routes as web_read_routes,
+};
 use crate::db::{
     models::{OrgPolicy, OrgPolicyType, User},
     DbConn,

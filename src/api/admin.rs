@@ -73,6 +73,27 @@ pub fn routes() -> Vec<Route> {
     ]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    if !CONFIG.disable_admin_token() && !CONFIG.is_admin_token_set() {
+        return routes![admin_disabled];
+    }
+
+    routes![
+        admin_page,
+        admin_page_login,
+        logout,
+        get_users_json,
+        get_user_json,
+        get_user_by_mail_json,
+        users_overview,
+        organizations_overview,
+        diagnostics,
+        get_diagnostics_config,
+        get_diagnostics_http,
+    ]
+}
+
 pub fn catchers() -> Vec<Catcher> {
     if !CONFIG.disable_admin_token() && !CONFIG.is_admin_token_set() {
         catchers![]

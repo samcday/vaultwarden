@@ -24,6 +24,11 @@ pub fn routes() -> Vec<Route> {
     routes![ldap_import]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    Vec::new()
+}
+
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct OrgImportGroupData {

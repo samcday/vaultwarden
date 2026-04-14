@@ -75,6 +75,23 @@ pub fn routes() -> Vec<rocket::Route> {
     ]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<rocket::Route> {
+    routes![
+        profile,
+        get_public_keys,
+        revision_date,
+        get_known_device,
+        get_all_devices,
+        get_device,
+        get_tasks,
+        get_auth_request,
+        get_auth_request_response,
+        get_auth_requests,
+        get_auth_requests_pending,
+    ]
+}
+
 #[derive(Debug, Deserialize, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct KDFData {

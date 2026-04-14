@@ -19,6 +19,11 @@ pub fn routes() -> Vec<Route> {
     routes![generate_authenticator, activate_authenticator, activate_authenticator_put, disable_authenticator]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    Vec::new()
+}
+
 #[post("/two-factor/get-authenticator", data = "<data>")]
 async fn generate_authenticator(data: Json<PasswordOrOtpData>, headers: Headers, conn: DbConn) -> JsonResult {
     let data: PasswordOrOtpData = data.into_inner();

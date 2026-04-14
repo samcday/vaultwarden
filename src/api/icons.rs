@@ -31,6 +31,14 @@ pub fn routes() -> Vec<Route> {
     }
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    match CONFIG.icon_service().as_str() {
+        "internal" => routes![icon_internal],
+        _ => routes![icon_external],
+    }
+}
+
 static CLIENT: LazyLock<Client> = LazyLock::new(|| {
     // Generate the default headers
     let mut default_headers = HeaderMap::new();

@@ -47,6 +47,11 @@ pub fn routes() -> Vec<Route> {
     routes![get_webauthn, generate_webauthn_challenge, activate_webauthn, activate_webauthn_put, delete_webauthn,]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    Vec::new()
+}
+
 // Some old u2f structs still needed for migrating from u2f to WebAuthn
 // Both `struct Registration` and `struct U2FRegistration` can be removed if we remove the u2f to WebAuthn migration
 #[derive(Serialize, Deserialize)]

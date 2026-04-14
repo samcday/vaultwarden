@@ -21,6 +21,11 @@ pub fn routes() -> Vec<Route> {
     routes![get_email, send_email_login, send_email, email,]
 }
 
+#[allow(dead_code)]
+pub fn read_routes() -> Vec<Route> {
+    Vec::new()
+}
+
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct SendEmailLoginData {
